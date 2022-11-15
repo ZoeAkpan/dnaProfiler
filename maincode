@@ -1,0 +1,92 @@
+import os
+import csv
+import sys
+def read_dna(dna_filename):
+    with open(dna_filename) as f:
+        f = f.read()
+        return f
+
+def dna_length(dna_filename):
+    with open(dna_filename) as f:
+        f = f.read()
+    return len(f)
+
+def read_strs(str_filename):
+    with open(str_filename) as f:
+        """
+        f = list(csv.reader(f, delimiter=','))
+        finalList = []
+        for line in f:
+            if line != f[0]:
+                dictF = {}
+                for i in range(len(line)):
+                    dictF[f[i]] = line[i]
+                finalList.append(dictF)
+        ok well this wasn't necessary 
+        """
+        f = csv.DictReader(f)
+        finalList = []
+        for row in f:
+            finalList.append(row)
+    return finalList
+
+def get_strs(str_profile):
+    finalList = []
+    for key in str_profile:
+        if key != 'name':
+            tupleS = (key, int(str_profile[key]))
+            finalList.append(tupleS)
+    return finalList
+
+def longest_str_repeat_count(str_frag, dna_seq):
+    # this could definitely be rewritten
+    i = 0
+    counterList = []
+    while i < len(dna_seq):
+        counter = 0
+        # maybe could add another while loop for keeping count of just the longest one
+        while dna_seq[i:i+4] == str_frag:
+            counter += 1
+            i += 4
+        else:
+            i += 1  
+        counterList.append(counter)
+    maxInRow = max(counterList)
+    return maxInRow     
+
+def find_match(str_profile, dna_seq):
+    AGAT = longest_str_repeat_count(str_profile[0][0], dna_seq)
+    AATG = longest_str_repeat_count(str_profile[1][0], dna_seq)
+    TATC = longest_str_repeat_count(str_profile[2][0], dna_seq)
+
+    if AGAT == str_profile[0][1] and AATG == str_profile[1][1] and TATC == str_profile[2][1]:
+        return True
+    else:
+        return False
+
+def dna_match(str_filename, dna_filename):
+    contentsOfDNA = read_dna(dna_filename)
+    contentsOfSTR = read_strs(str_filename)
+    alice = get_strs(contentsOfSTR[0])
+    bob = get_strs(contentsOfSTR[1])
+    charlie = get_strs(contentsOfSTR[2])
+
+    alice = find_match(alice, contentsOfDNA)
+    bob = find_match(bob, contentsOfDNA)
+    charlie = find_match(charlie, contentsOfDNA)
+
+    if alice == True:
+        return 'Alice'
+    elif bob == True:
+        return 'Bob'
+    elif charlie == True:
+        return 'Charlie'
+    else:
+        return 'No match'
+
+if __name__ == "__main__":
+    """
+    if len(sys.argv) != 2:
+        print("'Usage: python dna.py STR_FILE DNA_FILE")
+    """
+       
