@@ -89,4 +89,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("'Usage: python dna.py STR_FILE DNA_FILE")
     """
-       
+    if len(sys.argv) != 3:
+        print('Usage: python dna.py STR_FILE DNA_FILE')
+        sys.exit(1)
+    else:
+        print(dna_match(sys.argv[1],sys.argv[2]))
